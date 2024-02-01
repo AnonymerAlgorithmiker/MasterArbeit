@@ -1,0 +1,3 @@
+/home/linusd/Git/StatCollector/cmake-build-debug/CMakeFiles/StatCollector.dir
+/home/linusd/Git/StatCollector/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/linusd/Git/StatCollector/cmake-build-debug/CMakeFiles/rebuild_cache.dir
