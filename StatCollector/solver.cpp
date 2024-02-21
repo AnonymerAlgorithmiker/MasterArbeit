@@ -2,33 +2,84 @@
 // Created by linus on 03.02.24.
 //
 
-#include <filesystem>
 #include <iostream>
 #include <array>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
 
 using namespace std;
-//executes cmd and redirects it's output in result
-std::string exec(const char* cmd) {
+
+//Decodes the Command into one of the three Panda programs
+string cmdName(const char* cmd){
+    string cmdName="Unknown Command";
+    string engine = "pandaPIengine";
+    string parser = "pandaPIparser";
+    string grounder = "pandaPIgrounder";
+
+    int multOccurunceCheck=0;
+    if(((string)cmd).find(engine)!=string::npos){
+        cmdName=engine;
+        multOccurunceCheck++;
+    }
+    if(((string)cmd).find(parser)!=string::npos){
+        cmdName=parser;
+        multOccurunceCheck++;
+    }
+    if(((string)cmd).find(grounder)!=string::npos){
+        cmdName=grounder;
+        multOccurunceCheck++;
+    }
+    if(multOccurunceCheck>=2){
+        cmdName="Mixed Signals :/";
+    }
+    return cmdName;
+}
+
+
+std::string exec(const char* cmd)
+{
     std::array<char, 128> buffer;
     std::string result;
-    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd, "r"), pclose);
-    if (!pipe) {
-        throw std::runtime_error("popen() failed!");
+    auto pipe = popen(cmd, "r");
+
+    if (!pipe) throw std::runtime_error("popen() failed!");
+
+    while (!feof(pipe))
+    {
+        if (fgets(buffer.data(), 128, pipe) != nullptr)
+            result += buffer.data();
     }
-    while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
-        result += buffer.data();
+
+    auto rc = pclose(pipe);
+    //Adding "Success" or "Failure" string to result for Stat Evaluation
+    if (rc == EXIT_SUCCESS)
+    {
+        std::cout << "Programm: " << cmdName(cmd) << endl;
+        std::cout << "SUCCESS\n";
+        result+="\n-Success";
     }
+    else
+    {
+        std::cout << "Programm: " << cmdName(cmd) << endl;
+        std::cout << "FAILED\n";
+        result+="\n-Failure";
+    }
+
     return result;
 }
+
+
 
 string solveSingleProblem(string problem,string domainFile,string htn,string sas){
     //get the Filenames
     string problemPath=problem;
 
     //put the Filenames in the commands
-    string parserCmd = parserPth+" "+domainFile +" "+problemPath+" "+htn;
+    string parserCmd = parserPth+" "+domainFile +" "+problemPath+" "+htn +" 2>&1";
     string grounderCmd = grounderPth +" "+htn+" "+sas;
-    string engineCmd = enginePth+" "+engineConf+" "+sas;
+    string engineCmd = "systemd-run --user -G --pipe -p MemoryMax=6000M "+ enginePth+" "+engineConf+" "+sas +" 2>&1";
+
 
     //execute commands
     const char* charParserCmd=parserCmd.c_str();
@@ -37,17 +88,19 @@ string solveSingleProblem(string problem,string domainFile,string htn,string sas
     string parserResult=exec(charParserCmd);
     string grounderResult=exec(charGrounderCmd);
     string engineResult=exec(charEngineCmd);
-    //string engineResult ="";
+
     //return results of pandaPIengine
     return engineResult;
 }
 
 //will create Htn and Sas Paths with generic names
 //multiple uses will overwrite those Files!
-string* solveMultipleProblems(string* names,int sampleSize,string domain){
+string* solveMultipleProblems(string* names,int sampleSize,string domainName,string domainFile){
     string* results=new string[sampleSize];
     for(int i=0;i<sampleSize;i++){
-        results[i]=solveSingleProblem(names[i], domain, getHtnPath(i,domain), getSasPath(i,domain));
+        cout << "Domain: " << domainName << endl;
+        cout << "Problem : " << (i+1) << "von " << sampleSize << endl;
+        results[i]=solveSingleProblem(names[i], domainFile, getHtnPath(i,domainName), getSasPath(i,domainName));
     }
     return results;
 

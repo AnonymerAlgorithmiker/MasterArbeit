@@ -11,12 +11,20 @@ using namespace std;
 const string parserPth="/home/linus/Git/PANDA/pandaPIparser/pandaPIparser";
 const string grounderPth="/home/linus/Git/PANDA/pandaPIgrounder/pandaPIgrounder -q";
 const string enginePth="/home/linus/Git/PANDA/pandaPIengine/build/pandaPIengine";
-const string planDir="/home/linus/Git/PANDA/acyclic_problems/hddl";
-const string htnDir="/home/linus/Git/PANDA/htn";
-const string sasDir="/home/linus/Git/PANDA/sas";
+const string planDir="/home/linus/Git/PANDA/StatCollectorPlans/StatCollectorInput";
+const string htnDir="/home/linus/Git/PANDA/StatCollectorPlans/htn";
+const string sasDir="/home/linus/Git/PANDA/StatCollectorPlans/sas";
+const string outputFile="/home/linus/Git/PANDA/StatCollectorPlans/StatCollectorOutput/stats.txt";
 
 //Name of the Domain is only used to generate Names for Sas and htn files
+//C1-C4
 const string engineConf= "-p --heuristic=\"dof(pg=relaxed;tdg=allowUC)\"";
+//C1-C6
+//const string engineConf= "-p --heuristic=\"dof(pg=full;tdg=allowUC)\"";
+//C1-C12
+//const string engineConf= "-p --heuristic=\"dof(pg=full;tdg=uc)\"";
+//No Constraints
+//const string engineConf= "-p --heuristic=\"dof(pg=none;tdg=uc)\"";
 //const string engineConf = "";
 //const string engineConf= "--timelimit=30";
 
