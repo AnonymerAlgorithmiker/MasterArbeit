@@ -8,13 +8,13 @@ namespace fs = std::filesystem;
 using namespace std;
 
 //Paths to the various directory configure for your own System
-const string parserPth="/home/linus/Git/PANDA/pandaPIparser/pandaPIparser";
-const string grounderPth="/home/linus/Git/PANDA/pandaPIgrounder/pandaPIgrounder -q";
-const string enginePth="/home/linus/Git/PANDA/pandaPIengine/build/pandaPIengine";
-const string planDir="/home/linus/Git/PANDA/StatCollectorPlans/StatCollectorInput";
-const string htnDir="/home/linus/Git/PANDA/StatCollectorPlans/htn";
-const string sasDir="/home/linus/Git/PANDA/StatCollectorPlans/sas";
-const string outputFile="/home/linus/Git/PANDA/StatCollectorPlans/StatCollectorOutput/stats.txt";
+const string parserPth="~/panda/pandaPIparser/pandaPIparser";
+const string grounderPth="~/panda/pandaPIgrounder/pandaPIgrounder -q";
+const string enginePth="~/panda/pandaPIengine/build/pandaPIengine";
+const string planDir="/home/linusd/panda/StatCollectorPlans/StatCollectorInput";
+const string htnDir="~/panda/StatCollectorPlans/htn";
+const string sasDir="~/panda/StatCollectorPlans/sas";
+const string outputFile="~/panda/StatCollectorPlans/StatCollectorOutput/stats.txt";
 
 //Name of the Domain is only used to generate Names for Sas and htn files
 //C1-C4 & C7-C8
