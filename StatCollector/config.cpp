@@ -17,16 +17,14 @@ const string sasDir="/home/linus/Git/PANDA/StatCollectorPlans/sas";
 const string outputFile="/home/linus/Git/PANDA/StatCollectorPlans/StatCollectorOutput/stats.txt";
 
 //Name of the Domain is only used to generate Names for Sas and htn files
-//C1-C4
-const string engineConf= "-p --heuristic=\"dof(pg=relaxed;tdg=allowUC)\"";
-//C1-C6
-//const string engineConf= "-p --heuristic=\"dof(pg=full;tdg=allowUC)\"";
+//C1-C4 & C7-C8
+//const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=relaxed;tdg=allowUC)\"";
+//C1-C8
+const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=allowUC)\"";
 //C1-C12
-//const string engineConf= "-p --heuristic=\"dof(pg=full;tdg=uc)\"";
+//const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=uc)\"";
 //No Constraints
-//const string engineConf= "-p --heuristic=\"dof(pg=none;tdg=uc)\"";
-//const string engineConf = "";
-//const string engineConf= "--timelimit=30";
+//const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=none;tdg=allowUC)\"";
 
 //creates List fo all Files in dir
 string* getProblemNames(string dir,int amntFiles){

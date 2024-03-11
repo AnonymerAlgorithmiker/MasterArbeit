@@ -27,9 +27,9 @@ void printStatsPerProblem(string outputFileName,string dir) {
         string htn = getHtnPath(i, domainName);
         string sas = getSasPath(i, domainName);
         string result = solveSingleProblem(problemNames[i], domainFile, htn, sas);
-        tuple<bool, bool, bool, float, float, float> stat = collectSingleStat(result);
+        pandaStat stat = collectSingleStat(result,domainName,problemNames[i],engineConf);
 
-        outputSingleStat(stat, problemNames[i], os);
+        stat.outputSingleStat(os);
     }
     os.close();
 }
@@ -53,12 +53,12 @@ void printStatsPerDomain(string outputFileName,string dir){
     string domainName = getDomainName(domainDir);
     string domainFile = domainDir + "/domain.hddl";
 
-    tuple<bool*, bool*, bool*, int*, int*, float*> stats;
+    pandaStat* stats;
     string* result = solveMultipleProblems(problemNames,amntProblems,domainName,domainFile);
-    stats = collectMultipleStats(result,amntProblems);
+    stats = collectMultipleStats(result,amntProblems,problemNames,domainName,engineConf);
 
-    tuple<int,int,int,float,float,float> averages = calculateAverages(stats,amntProblems);
-    outputAverageStats(averages, domainName,amntProblems,os);
+    pandaAverageStat averages = calculateAverages(stats,amntProblems,domainName,engineConf);
+    averages.outputAverageStats(os);
     os.close();
 }
 
@@ -72,7 +72,7 @@ void printStatsMultipleDomains(string outputFileName,string dir,bool orderedByDo
     int dirTotalSize = getDirTotalSize(dir);
     string* subDirs = getSubDirNames(dir,dirTotalSize);
 
-    tuple<bool*,bool*,bool*,int*,int*,float*> allStats;
+    pandaStat* allStats;
     int currSampleSize=0;
 
     for(int i=0;i<dirTotalSize;i++){
@@ -82,24 +82,24 @@ void printStatsMultipleDomains(string outputFileName,string dir,bool orderedByDo
         string *problemNames = getProblemNames(currSubDir, amntProblems);
         string domainFile = currSubDir + "/domain.hddl";
 
-        tuple<bool*, bool*, bool*, int*, int*, float*> stats;
+        pandaStat* stats;
         string* result = solveMultipleProblems(problemNames,amntProblems,currDomain,domainFile);
-        stats = collectMultipleStats(result,amntProblems);
+        stats = collectMultipleStats(result,amntProblems,problemNames, currDomain,engineConf);
 
         if(orderedByDomain){
-            tuple<int,int,int,float,float,float> averages = calculateAverages(stats,amntProblems);
-            outputAverageStats(averages, currDomain,amntProblems,os);
+            pandaAverageStat averages = calculateAverages(stats,amntProblems,currDomain,engineConf);
+            averages.outputAverageStats(os);
         }else if(i==0){
            allStats=stats;
            currSampleSize=amntProblems;
         }else{
-            allStats= addStats(allStats,currSampleSize,stats,amntProblems);
+            allStats= addStats(allStats,stats,currSampleSize,amntProblems);
             currSampleSize+= amntProblems;
         }
     }
     if(!orderedByDomain){
-        tuple<int,int,int,float,float,float> averages = calculateAverages(allStats,currSampleSize);
-        outputAverageStats(averages, "Mixed Domains",currSampleSize,os);
+        pandaAverageStat averages = calculateAverages(allStats,currSampleSize,"Mixed Domains",engineConf);
+        averages.outputAverageStats(os);
     }
 
     os.close();

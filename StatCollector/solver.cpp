@@ -10,12 +10,31 @@
 
 using namespace std;
 
+
+inline bool is_return(const char& input)
+{
+    return input == '\n' || input == '\r';
+}
+
+string last_line (const string& input)
+{
+    if(input.length() == 1) return input;
+    size_t position = input.length()-2; // last character might be a return character, we can jump over it anyway
+    while((not is_return(input[position])) and position > 0) position--;
+    // now we are at the \n just before the last line, or at the first character of the string
+    if(is_return(input[position])) position += 1;
+    // now we are at the beginning of the last line
+
+    return input.substr(position-3);
+}
+
 //Decodes the Command into one of the three Panda programs
 string cmdName(const char* cmd){
     string cmdName="Unknown Command";
     string engine = "pandaPIengine";
     string parser = "pandaPIparser";
     string grounder = "pandaPIgrounder";
+    string journal = "journalctl";
 
     int multOccurunceCheck=0;
     if(((string)cmd).find(engine)!=string::npos){
@@ -28,6 +47,10 @@ string cmdName(const char* cmd){
     }
     if(((string)cmd).find(grounder)!=string::npos){
         cmdName=grounder;
+        multOccurunceCheck++;
+    }
+    if(((string)cmd).find(journal)!=string::npos){
+        cmdName=journal;
         multOccurunceCheck++;
     }
     if(multOccurunceCheck>=2){
@@ -52,18 +75,29 @@ std::string exec(const char* cmd)
     }
 
     auto rc = pclose(pipe);
+
     //Adding "Success" or "Failure" string to result for Stat Evaluation
     if (rc == EXIT_SUCCESS)
     {
         std::cout << "Programm: " << cmdName(cmd) << endl;
         std::cout << "SUCCESS\n";
-        result+="\n-Success";
+        if(cmdName(cmd)!="journalctl") {
+            result += "\n-Success";
+        }
     }
     else
     {
         std::cout << "Programm: " << cmdName(cmd) << endl;
         std::cout << "FAILED\n";
-        result+="\n-Failure";
+        if(cmdName(cmd)=="pandaPIengine"){
+            string journalCmd = "journalctl --user-unit=panda -n 5 --no-pager";
+            const char* charJournalCmd = journalCmd.c_str();
+            string errormessage= exec(charJournalCmd);
+            cout << errormessage << endl;
+            result+=errormessage;
+        }else{
+            result+="\n-Failure";
+        }
     }
 
     return result;
@@ -76,10 +110,12 @@ string solveSingleProblem(string problem,string domainFile,string htn,string sas
     string problemPath=problem;
 
     //put the Filenames in the commands
+    cout << problemPath << endl;
     string parserCmd = parserPth+" "+domainFile +" "+problemPath+" "+htn +" 2>&1";
     string grounderCmd = grounderPth +" "+htn+" "+sas;
-    string engineCmd = "systemd-run --user -G --pipe -p MemoryMax=6000M "+ enginePth+" "+engineConf+" "+sas +" 2>&1";
-
+    string engineCmd = "systemd-run --user --unit=panda -G --pipe -p MemoryMax=6000M -p RuntimeMaxSec=60 "+ enginePth+" "+engineConf+" "+sas +" 2>&1";
+    //Full EngineCmd example
+    //systemd-run --user -G --pipe -p MemoryMax=6000M /home/linus/Git/PANDA/pandaPIengine/build/pandaPIengine --heuristic="dof(pg=relaxed;tdg=allowUC)" /home/linus/Git/PANDA/testPlans/Woodworking2.sas
 
     //execute commands
     const char* charParserCmd=parserCmd.c_str();
