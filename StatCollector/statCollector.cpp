@@ -66,6 +66,18 @@ pandaStat collectSingleStat(string result,string domain,string problem,string co
                }
             }
         }
+        if(line.find("- Generated ")!=string::npos && line.find("search nodes")!=string::npos){
+            stringstream linestr(line);
+            string word;
+            linestr >> word;
+            linestr >> word;
+            linestr >> word;
+            searchnodes = stoi(word);
+        }
+        if(line.find("Exceeded Max Method condition")!=string::npos){
+            assertionError=true;
+        }
+
     }
     pandaStat outputStat=pandaStat(solved, ramError, timeError, assertionError, length, cost, searchnodes, time);
     outputStat.addContext(domain,problem,config);

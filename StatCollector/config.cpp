@@ -11,10 +11,10 @@ using namespace std;
 const string parserPth="~/panda/pandaPIparser/pandaPIparser";
 const string grounderPth="~/panda/pandaPIgrounder/pandaPIgrounder -q";
 const string enginePth="~/panda/pandaPIengine/build/pandaPIengine";
-const string planDir="/home/linusd/panda/StatCollectorPlans/StatCollectorInput";
+const string planDir="/home/linus/panda/StatCollectorPlans/StatCollectorInput";
 const string htnDir="~/panda/StatCollectorPlans/htn";
 const string sasDir="~/panda/StatCollectorPlans/sas";
-const string outputFile="~/panda/StatCollectorPlans/StatCollectorOutput/stats.txt";
+const string outputFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/stats.txt";
 
 //Name of the Domain is only used to generate Names for Sas and htn files
 //C1-C4 & C7-C8

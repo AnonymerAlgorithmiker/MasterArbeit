@@ -1,0 +1,44 @@
+Returns the maximum ammount of decompositions of the task n given a Searchnode node
+in an hierachical planning problem with (0 ... n_max) tasks and (0 ... m_max) methods).
+
+Input: Searchnode - node; Task - task_x;
+
+int task_x_maxValue = 0;
+
+Queue producer
+producer.push((noop(x),task_x,1))
+
+IntArray contribution[task_0 ... task_n_max]
+for(i: 0 ... n_max){
+	contribution[task_i] = 0
+}
+contribution[task_x]=1
+
+while(producer != empty){
+	(currM,currN,currY) = producer.pop
+
+	contribution[task(currM)] = max{currY*contribution[task(currN)],contribution[task(currM)]}
+
+	for((m,x,n) in subtask(task(currM))){
+		//maybe check for cycles
+		if(!producer.contains(m,x,n)){
+			producer.push((m,x,n))
+		}
+    	}
+}
+
+for(task_i in containedTask(node){
+	task_x_maxValue+=contribution[task_i];	
+}
+
+return task_x_maxValue
+
+
+subtask(n):= set of tuples (m,n,y) where the task_n is contained y >=1 times as subtask of m.
+
+task(m):= task that is decomposed in the method m.
+
+containedTask(node) := multiset of tasks that are contained in the current searchnode 
+If an task has x occurences in node it will be contained x times in the multiset.
+
+noop(x) := dummy method that decomposes x into x

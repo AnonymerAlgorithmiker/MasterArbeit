@@ -1,0 +1,15 @@
+int M_m,max = 0;
+Queue producer
+producer.push(task(m))
+while(stack != empty){
+    curr = producer.pop
+    if(curr in tnI){
+        M_m,max++
+    }
+    for(m in mst(curr)){  
+        producer.push(m)   -> task(m)?
+    }
+}
+
+return M_m,max
+
