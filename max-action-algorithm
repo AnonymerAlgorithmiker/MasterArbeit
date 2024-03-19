@@ -1,3 +1,5 @@
+Approach 1.
+
 Returns the maximum ammount of decompositions of the task n given a Searchnode node
 in an hierachical planning problem with (0 ... n_max) tasks and (0 ... m_max) methods).
 
@@ -42,3 +44,51 @@ containedTask(node) := multiset of tasks that are contained in the current searc
 If an task has x occurences in node it will be contained x times in the multiset.
 
 noop(x) := dummy method that decomposes x into x
+
+Approach 2.
+
+Returns the maximum ammount of decompositions of the task n given a Searchnode node
+in an hierachical planning problem with (0 ... n_max) tasks and (0 ... m_max) methods).
+Nodes is a mulitset of tasks(can contain multiple instances of tasks).
+boolNode is a multiset of tasks with a boolean Value for every task that indicates if the task has already been decomposed
+
+Input: node - initialNode; Task - task_x;
+
+int task_x_maxValue = 0;
+
+Queue<boolNode> fringe
+List<boolNode> leafs
+
+boolNode initialBoolNode
+for(task in initialNode){
+	initialBoolNode.add(<task,false>)
+}
+fringe.push(initialBoolNode)
+
+while(fringe != empty){
+	curr = fringe.pop
+	bool isLeaf=true
+	for(<task,bool> in curr){
+		if(task.isAbstract && bool == false){
+			for(currMethod in methods(action)){
+				bool = true
+				fringe.push(curr Union <subtask(currMethod),false>)
+			}		
+			isLeaf=false
+		}	
+	}
+	if(isLeaf){
+		leafs.add(curr)	
+	}
+}
+
+for(leaf in leafs){
+	task_x_maxValue=max(contains(leaf,task_x),task_x_maxValue)
+}
+
+
+
+
+methods(action) := set of methods that are applicable to action
+subtask(method) := set of subtasks that will be produced by method
+

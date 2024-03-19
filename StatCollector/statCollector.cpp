@@ -74,8 +74,10 @@ pandaStat collectSingleStat(string result,string domain,string problem,string co
             linestr >> word;
             searchnodes = stoi(word);
         }
-        if(line.find("Exceeded Max Method condition")!=string::npos){
+        if(line.find("Exceeded Max Action condition")!=string::npos){
             assertionError=true;
+            cout << "Problem: " << problem << endl;
+            cout << "Assertion Error" << endl;
         }
 
     }
