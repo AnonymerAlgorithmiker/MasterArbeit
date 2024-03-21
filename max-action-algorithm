@@ -10,7 +10,14 @@ int task_x_maxValue = 0;
 Queue producer
 producer.push((noop(x),task_x,1))
 
-<int,list<list>> contribution
+//Every task can possible contribute to producing task_x
+//The int value indicates how often task_x can be produced from the current task
+//If the int value is -1 then it cant be calculated right away
+//The list stores the possible decompositions
+//For every decomposition we store the tasks with unkown contribution its corresponding list
+//For every decomposition we store the amount of task_x that can be produced for certain in its corresponding int value
+
+<int,list<int,list>> contribution
 Array<contribution> contributions[task_1 ... task_n_max]
 for(i: 0 ... n_max){
 	contribution[task_i] = <0,null>
@@ -20,18 +27,38 @@ contribution[task_x]=<1,null>
 while(producer != empty){
 	(currM,currN,currY) = producer.pop
 
-	contribution[task(currM)] = max{currY*contribution[task(currN)],contribution[task(currM)]}
-	int newPrimitiveContribution =0;
-	list newComplexContribution =null;
-	for(subtask in subtask(currM){
-		if(contribution[subtask] == <z,null>){
-			newPrimitiveContribution +=z
-		}else{
-			
-		}
-			
-	}
+	//update contribution of task(currM)
+	oldContribution[task(currM)] = <oldInt,oldList>		
 
+	int newInt=0;
+	list newList= {};
+	for(subtask in subtask(currM){
+		if(subtask==task_x){
+			newInt+= 1
+		if(contribution[subtask] == <z,null>){
+			newInt +=z
+		}else if(isAbstract(subtask)){
+			newList.add(subtask)	
+		}
+	}
+	if(newList != empty){
+		oldInt = -1	
+	}
+	if(oldInt != -1) {
+		contribution[task(currM)] = <max{newInt,oldInt},null>	
+	}else{
+		oldList.push(<newInt,newList>)
+	}
+		
+
+	if(newListContribution == empty){
+		contribution[task(currM)] = max{currY*contribution[task(currN)],contribution[task(currM)]}
+	}else{
+		
+	}
+	
+	
+	//consider additional producers
 	for((m,x,n) in producer(task(currM))){
 		//maybe check for cycles
 		if(!producer.contains(m,x,n)){
@@ -57,6 +84,8 @@ If an task has x occurences in node it will be contained x times in the multiset
 
 noop(x) := dummy method that decomposes x into x
 
+isAbstract(task) := true if task is an Abstract task, false otherwise
+
 Approach 2.
 
 Returns the maximum ammount of decompositions of the task n given a Searchnode node
@@ -81,8 +110,8 @@ while(fringe != empty){
 	curr = fringe.pop
 	bool isLeaf=true
 	for(<task,bool> in curr){
-		if(task.isAbstract && bool == false){
-			for(currMethod in methods(action)){
+		if(isAbstract(task) && bool == false){
+			for(currMethod in methods(task)){
 				bool = true
 				fringe.push(curr Union <subtask(currMethod),false>)
 			}		
@@ -101,6 +130,7 @@ for(leaf in leafs){
 
 
 
-methods(action) := set of methods that are applicable to action
+isAbstract(task) := true if task is an Abstract task, false otherwise
+methods(task) := set of methods that are applicable to task
 subtask(method) := set of subtasks that will be produced by method
 
