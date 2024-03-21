@@ -10,18 +10,29 @@ int task_x_maxValue = 0;
 Queue producer
 producer.push((noop(x),task_x,1))
 
-IntArray contribution[task_0 ... task_n_max]
+<int,list<list>> contribution
+Array<contribution> contributions[task_1 ... task_n_max]
 for(i: 0 ... n_max){
-	contribution[task_i] = 0
+	contribution[task_i] = <0,null>
 }
-contribution[task_x]=1
+contribution[task_x]=<1,null>
 
 while(producer != empty){
 	(currM,currN,currY) = producer.pop
 
 	contribution[task(currM)] = max{currY*contribution[task(currN)],contribution[task(currM)]}
+	int newPrimitiveContribution =0;
+	list newComplexContribution =null;
+	for(subtask in subtask(currM){
+		if(contribution[subtask] == <z,null>){
+			newPrimitiveContribution +=z
+		}else{
+			
+		}
+			
+	}
 
-	for((m,x,n) in subtask(task(currM))){
+	for((m,x,n) in producer(task(currM))){
 		//maybe check for cycles
 		if(!producer.contains(m,x,n)){
 			producer.push((m,x,n))
@@ -35,8 +46,9 @@ for(task_i in containedTask(node){
 
 return task_x_maxValue
 
+subtask(m) := multiset of subtasks that will be produced by method m
 
-subtask(n):= set of tuples (m,n,y) where the task_n is contained y >=1 times as subtask of m.
+producer(n):= set of tuples (m,n,y) where the task_n can be produced y >=1 times as subtask of m.
 
 task(m):= task that is decomposed in the method m.
 
