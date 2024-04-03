@@ -6,25 +6,30 @@
 
 namespace fs = std::filesystem;
 using namespace std;
-
+namespace config{
 //Paths to the various directory configure for your own System
-const string parserPth="~/panda/pandaPIparser/pandaPIparser";
-const string grounderPth="~/panda/pandaPIgrounder/pandaPIgrounder -q";
-const string enginePth="~/panda/pandaPIengine/build/pandaPIengine";
-const string planDir="/home/linus/panda/StatCollectorPlans/StatCollectorInput";
-const string htnDir="~/panda/StatCollectorPlans/htn";
-const string sasDir="~/panda/StatCollectorPlans/sas";
-const string outputFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/stats.txt";
+    const string parserPth="~/panda/pandaPIparser/pandaPIparser";
+    const string grounderPth="~/panda/pandaPIgrounder/pandaPIgrounder -q";
+    const string enginePth="~/panda/pandaPIengine/build/pandaPIengine";
+    const string planDir="/home/linus/panda/StatCollectorPlans/StatCollectorInput";
+    const string htnDir="~/panda/StatCollectorPlans/htn";
+    const string sasDir="~/panda/StatCollectorPlans/sas";
+    const string outputFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/stats.txt";
+    const string problemFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/problems.csv";
+    const string average_obdFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/average_obd.csv";
+    const string averageFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/average_allDomains.csv";
 
+    const string confName = "C1-C8|Max-Method|FirstNode|Subtraction";
 //Name of the Domain is only used to generate Names for Sas and htn files
 //C1-C4 & C7-C8
 //const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=relaxed;tdg=allowUC)\"";
 //C1-C8
-const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=allowUC)\"";
+    const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=allowUC)\"";
 //C1-C12
 //const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=uc)\"";
 //No Constraints
 //const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=none;tdg=allowUC)\"";
+}
 
 //creates List fo all Files in dir
 string* getProblemNames(string dir,int amntFiles){
@@ -82,10 +87,10 @@ int getDirAmntProblems(string dir){
 string getHtnPath(int i, string domain){
     string result;
     if(i<10){
-        result=htnDir+"/"+domain+"_0"+to_string(i)+".htn";
+        result=config::htnDir+"/"+domain+"_0"+to_string(i)+".htn";
     } else{
 
-        result=htnDir+"/"+domain+"_"+to_string(i)+".htn";
+        result=config::htnDir+"/"+domain+"_"+to_string(i)+".htn";
     }
     return result;
 }
@@ -94,10 +99,10 @@ string getHtnPath(int i, string domain){
 string getSasPath(int i, string domain){
     string result;
     if(i<10){
-        result=sasDir+"/"+domain+to_string(i)+".sas";
+        result=config::sasDir+"/"+domain+to_string(i)+".sas";
     } else{
 
-        result=sasDir+"/"+domain+to_string(i)+".sas";
+        result=config::sasDir+"/"+domain+to_string(i)+".sas";
     }
     return result;
 }

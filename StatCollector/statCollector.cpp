@@ -76,8 +76,6 @@ pandaStat collectSingleStat(string result,string domain,string problem,string co
         }
         if(line.find("Exceeded Max Action condition")!=string::npos){
             assertionError=true;
-            cout << "Problem: " << problem << endl;
-            cout << "Assertion Error" << endl;
         }
 
     }

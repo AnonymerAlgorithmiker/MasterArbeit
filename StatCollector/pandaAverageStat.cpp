@@ -70,6 +70,25 @@ public:
         outputFile << "Average time in s " << avgTime << endl;
     }
 
+    void outputAverageStats_csv(ofstream& outputFile,bool orderedByDomain){
+        if(orderedByDomain){
+            outputFile << domain << ",";
+        }
+        outputFile << config << ",";
+        outputFile << amntSolved << ",";
+        outputFile << amntRamError<< ",";
+        outputFile << amntTimeError << ",";
+        outputFile << amntAssertionError << ",";
+        outputFile << avgLength<< ",";
+        outputFile << avgCost << ",";
+        outputFile << avgSearchnodes << ",";
+        outputFile << avgTime << ",";
+        outputFile << sampleSize <<",";
+        outputFile << endl;
+    }
+
+
+
 };
 
 

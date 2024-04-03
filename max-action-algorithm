@@ -1,74 +1,88 @@
 Approach 1.
 
-Returns the maximum ammount of decompositions of the task n given a Searchnode node
-in an hierachical planning problem with (0 ... n_max) tasks and (0 ... m_max) methods).
+Returns the maximum amount of decompositions of the task n given a Searchnode node
+in an hierachical planning problem with (0 ... n_max) tasks and (0 ... m_max) methods.
 
 Input: Searchnode - node; Task - task_x;
 
-int task_x_maxValue = 0;
-
-Queue producer
-producer.push((noop(x),task_x,1))
+int task_x_maxValue = 0
 
 //Every task can possible contribute to producing task_x
 //The int value indicates how often task_x can be produced from the current task
-//If the int value is -1 then it cant be calculated right away
+//If the int value(of the contribution array) is -1 then it cant be calculated right away
 //For such tasks the the produced sets of tasks will be stored in postCalcContributions
 
 Array<list<<int,list<task>>> postcalcContributions[task_1 ... task_n_max]
 Array<int> contributions[task_1 ... task_n_max]
 for(i: 0 ... n_max){
 	if(isAbstract(task_i){
-		contribution[task_i] = -1
+		contribution[task_i] = -1 //abstract tasks can produce an unknown ammount of task_x
 	}else{
-		contribution[task_i] = 0
+		contribution[task_i] = 0 //primitive tasks that aren't task_x can't produce task_x
 	}
 	postCalcContributions[task_i] = {}
 }
 contribution[task_x]=1
 
+Queue producer
+producer.push((noop(x),task_x))
+
+//iterating bottom up through all potential producers
 while(producer != empty){
-	(currM,currN,currY) = producer.pop
+	(currM,currT) = producer.pop
 
 	//update contribution of task(currM)
-	currTask = task(currM)
+	currProducingTask = task(currM)
 	
 	bool primitiveContribution = true;
 	
-	int newContribution = 0;
+	int newContribution = 0
 	list newPostCalc = {}
-	for(subtask in subtasks(currM){
-		if(contribution[subtask] > -1){
-			newContribution += contribution[subtask]
+	if(currM != -1){
+		//decide whether the contribution of currProducingTask is primitive
+		//if all subtask of all methods have primitive contribution
+		//because they are primitive tasks or task_x 	
+		//-> the contribution of currProducing Task is also primitve and can be calculated right away
+		for(subtask in subtasks(currM)){
+			if(contribution[subtask] > -1){
+				newContribution += contribution[subtask]
+			}else{
+				newPostCalc.push(subtask)
+				primitiveContribution = false
+			}
+		}
+		if(primitiveContribuion){
+			//choose the highest primitive contribution(from the best method)
+			contribution[currProducingTask] = max{contribution[currProducingTask,newContribution}	
 		}else{
-			newPostCalc.push(subtask)
-			primitiveContribution = false
+			//store every possible contribution
+			contribution[currProducingTask] = -1
+			postCalcContribution[currProducingTask].push(<newContribution,newPostCalc>)
+		}
+		
+		
+		//consider indirect producers
+		for((m,t) in producer(currProducingTask)){
+			if(!producer.contains(m,t)){
+				producer.push((m,t))
+			}
 		}
 	}
-	if(primitiveContribuion){
-		contribution[currTask] = max{contribution[currTask,newContribution}	
-	}else{
-		contribution[currTask] = -1
-		postCalcContribution[currTask].push(<newContribution,newPostCalc>)
-	}
-	
-	
-	//consider additional producers
-	for((m,x,n) in producer(currTask)){
-		//maybe check for cycles
-		if(!producer.contains(m,x,n)){
-			producer.push((m,x,n))
-		}
-    	}
 }
 
+//iterate through every non-primitve contribution till everything is calculated
 while(!postCalcFinished){
 	bool postCalcFinished = true;
 	for(i : 0 ... n_max){
 		if(postsCalcContribution[task_i] != empty){
 			postCalcFinished = false;
+		}else if(postCalcContribution[task_i] = -1){
+			//abstract tasks that were never part of the producer Queue
+			contribution[taks_i]=0
 		}
 		bool all_lists_emtpy = true;
+		//check for every non-primitve contribution whether it contains a task with primitve contribution
+		//sum up all new primitive contributions
 		for(<currInt,currList> : postCalcContribution[task_i]){
 			if(currList != empty){
 				all_lists_empty=false;
@@ -80,6 +94,7 @@ while(!postCalcFinished){
 				}	
 			}
 		}
+		//if all non-primitive contribution are caluclated and summed the best contribuiton can be choosen
 		if(all_lists_empty){
 			for(<currInt,currList> : postCalcContribution[task_i]){
 				contribution[task_i]=max{contribution[task_i],currInt)}
@@ -94,9 +109,10 @@ for(task in containedTask(node)){
 
 return task_x_maxValue
 
+Used Methods:
 subtasks(m) := multiset of subtasks that will be produced by method m
 
-producer(n):= set of tuples (m,n,y) where the task_n can be produced y >=1 times as subtask of m.
+producer(t):= set of tuples (m,t) where the task_t can be produced as subtask of m.
 
 task(m):= task that is decomposed in the method m.
 
@@ -109,9 +125,10 @@ isAbstract(task) := true if task is an Abstract task, false otherwise
 
 Approach 2.
 
-Returns the maximum ammount of decompositions of the task n given a Searchnode node
+Returns the maximum amount of decompositions of the task n given a Searchnode node
 in an hierachical planning problem with (0 ... n_max) tasks and (0 ... m_max) methods).
-Nodes is a mulitset of tasks(can contain multiple instances of tasks).
+(ingnoring delete and ordering constraints)
+node is a mulitset of tasks(can contain multiple instances of tasks).
 boolNode is a multiset of tasks with a boolean Value for every task that indicates if the task has already been decomposed
 
 Input: node - initialNode; Task - task_x;
@@ -154,4 +171,4 @@ for(leaf in leafs){
 isAbstract(task) := true if task is an Abstract task, false otherwise
 methods(task) := set of methods that are applicable to task
 subtask(method) := set of subtasks that will be produced by method
-
+contains(leaf,task) := returns the amount of occurence that task has in leaf

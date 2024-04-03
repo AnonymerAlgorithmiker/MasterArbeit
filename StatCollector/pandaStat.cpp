@@ -73,6 +73,21 @@ public:
         outputFile << "Searchnodes: " << searchnodes << endl;
         outputFile << "Time " << time << endl;
     }
+    void outputSingleStat_csv(ofstream& outputFile){
+        outputFile << problem << ",";
+        outputFile << config << ",";
+        outputFile << domain << ",";
+        outputFile << solved << ",";
+        outputFile << ramError << ",";
+        outputFile << timeError << ",";
+        outputFile << assertionError << ",";
+        outputFile << length << ",";
+        outputFile << cost << ",";
+        outputFile << searchnodes << ",";
+        outputFile << time << ",";
+        outputFile << endl;
+    }
+
 };
 
 

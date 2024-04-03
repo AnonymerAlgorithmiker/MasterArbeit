@@ -111,9 +111,9 @@ string solveSingleProblem(string problem,string domainFile,string htn,string sas
 
     //put the Filenames in the commands
     cout << problemPath << endl;
-    string parserCmd = parserPth+" "+domainFile +" "+problemPath+" "+htn +" 2>&1";
-    string grounderCmd = grounderPth +" "+htn+" "+sas;
-    string engineCmd = "systemd-run --user --unit=panda -G --pipe -p MemoryMax=6000M -p RuntimeMaxSec=60 "+ enginePth+" "+engineConf+" "+sas +" 2>&1";
+    string parserCmd = config::parserPth+" "+domainFile +" "+problemPath+" "+htn +" 2>&1";
+    string grounderCmd = config::grounderPth +" "+htn+" "+sas;
+    string engineCmd = "systemd-run --user --unit=panda -G --pipe -p MemoryMax=6000M -p RuntimeMaxSec=60 "+ config::enginePth+" "+config::engineConf+" "+sas +" 2>&1";
     //Full EngineCmd example
     //systemd-run --user -G --pipe -p MemoryMax=6000M /home/linus/Git/PANDA/pandaPIengine/build/pandaPIengine --heuristic="dof(pg=relaxed;tdg=allowUC)" /home/linus/Git/PANDA/testPlans/Woodworking2.sas
 
