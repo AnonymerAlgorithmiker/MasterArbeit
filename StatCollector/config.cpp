@@ -18,17 +18,21 @@ namespace config{
     const string problemFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/problems.csv";
     const string average_obdFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/average_obd.csv";
     const string averageFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/average_allDomains.csv";
+    const string compareFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/compare.csv";
+    const string compareFile_avg="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/compare_averages.csv";
+    const string compareDir="/home/linus/panda/StatCollectorPlans/statcompare/";
 
-    const string confName = "C1-C8|Max-Method|FirstNode|Subtraction";
+    //const string confName = "C1-C8|Max-Method_and_Action|FirstNode|Subtraction";
+    const string confName = "No Constraints";
 //Name of the Domain is only used to generate Names for Sas and htn files
 //C1-C4 & C7-C8
 //const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=relaxed;tdg=allowUC)\"";
 //C1-C8
-    const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=allowUC)\"";
+//const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=allowUC)\"";
 //C1-C12
 //const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=uc)\"";
 //No Constraints
-//const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=none;tdg=allowUC)\"";
+const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=none;tdg=allowUC)\"";
 }
 
 //creates List fo all Files in dir

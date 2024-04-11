@@ -3,6 +3,7 @@
 //
 #include <fstream>
 #include "util.cpp"
+#include "statCompare.cpp"
 //will return detailed stats of every problem in dir to outputFile
 //dir has to contain a subDir with a name equal to the domain name
 //this subDir has to contain a domain File and one or multiple problem files
@@ -153,9 +154,19 @@ void printCompleteStatsMultipleDomains(string problemFile,string averageFile_obd
     }
     //output averagestats if all domains combined
     pandaAverageStat averages = calculateAverages(allStats,currSampleSize,"Mixed Domains",config::confName);
-    averages.outputAverageStats_csv(averageStream,true);
+    averages.outputAverageStats_csv(averageStream,false);
 
     problemStream.close();
     averageStream.close();
     average_obdStream.close();
+}
+
+void compareStats(){
+    int dirTotalSize = getDirTotalSize(config::compareDir);
+    string* statNames = getSubDirNames(config::compareDir,dirTotalSize);
+    vector<string> statNameVec;
+    for(int i=0;i<dirTotalSize;i++){
+        statNameVec.push_back(statNames[i]);
+    }
+    compareAndPrintStats(statNameVec,config::compareFile,config::compareFile_avg);
 }

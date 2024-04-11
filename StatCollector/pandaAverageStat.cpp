@@ -86,9 +86,6 @@ public:
         outputFile << sampleSize <<",";
         outputFile << endl;
     }
-
-
-
 };
 
 
