@@ -177,15 +177,13 @@ vector<vector<pandaStat>> compareSolvedStats_orderedByConfig(vector<vector<panda
             bool contains = false;
             int i = 0;
             for(pair<string,bool> problem : problemList){
-                i++;
                 if(get<0>(problem)==stat.problem){
                     contains = true;
                     if(!stat.solved){
-                        //todo: figure this out
                         problemList[i].second=false;
-                       //problem.second=false;
                     }
                 }
+                i++;
             }
             if(!contains){
                 problemList.push_back({stat.problem,stat.solved});
