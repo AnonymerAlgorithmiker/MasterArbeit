@@ -124,6 +124,26 @@ vector<pandaStat> readProblem_csv(string problemFile){
     return problemStats;
 }
 
+// todo: finish dis
+vector<vector<pandaStat>> orderSetByDomain(vector<pandaStat> unorderedSet){
+    int amntConfigs = 0;
+    vector<string> domains;
+    int domainNo;
+    for(int i = 0; i< unorderedSet.size();i++){
+        domainNo= -1;
+        pandaStat currStat = unorderedSet[i];
+        string currDomain = currStat.domain;
+        for(int n=0;n<domains.size();n++){
+            if(domains[n] == currDomain){
+               domainNo=n;
+            }
+        }
+        if(domainNo == -1){
+            domains.push_back(currDomain);
+        }
+    }
+}
+
 //prints multiple pandaStats into a csv file
 void printStats(vector<pandaStat> stats, string file){
     ofstream outputStream(file);
@@ -134,39 +154,6 @@ void printStats(vector<pandaStat> stats, string file){
 
 //compares multiple sets of stats
 //returns only the problems that are solved in all sets of stats
-vector<pandaStat> compareSolvedStats(vector<vector<pandaStat>> setOfStats){
-    //contains every problem that occurs in setOfStats
-    //the bool value indicates if the problems gets solved by every config
-    vector<pair<string,bool>> problemList;
-    for(vector<pandaStat> stats:setOfStats){
-        for(pandaStat stat : stats){
-            bool contains = false;
-            for(pair<string,bool> problem : problemList){
-                if(get<0>(problem)==stat.problem){
-                    contains = true;
-                    if(!stat.solved){
-                        problem.second=false;
-                    }
-                }
-            }
-            if(!contains){
-                problemList.push_back({stat.problem,stat.solved});
-            }
-        }
-    }
-    vector<pandaStat> result;
-    for(vector<pandaStat> stats : setOfStats){
-        for(pandaStat stat : stats){
-            for(pair<string,int> problem : problemList){
-                if(stat.problem == get<0>(problem) && get<1>(problem)){
-                    result.push_back(stat);
-                }
-            }
-        }
-    }
-
-    return result;
-}
 
 vector<vector<pandaStat>> compareSolvedStats_orderedByConfig(vector<vector<pandaStat>> setOfStats){
     //contains every problem that occurs in setOfStats
@@ -208,15 +195,37 @@ vector<vector<pandaStat>> compareSolvedStats_orderedByConfig(vector<vector<panda
 
 //takes multiple csv files(with possibly different config) that contain stats of problems
 //prints a csv file containing only problems that are solved by every input config
-void compareAndPrintStats(vector<string> inputFiles,string outputFile,string avg_outputFile){
+void compareAndPrintStats(vector<string> inputFiles,string outputFile,string avg_outputFile) {
+    vector<vector<pandaStat>> setOfStats;
+    for (string file: inputFiles) {
+        setOfStats.push_back(readProblem_csv(file));
+    }
+    vector<vector<pandaStat>> intersecStats = compareSolvedStats_orderedByConfig(setOfStats);
+    ofstream outputStream(outputFile);
+    ofstream avg_outputStream(avg_outputFile);
+    initAverageStats_csv(avg_outputStream, false);
+    for (vector<pandaStat> currConfig: intersecStats) {
+        //the set of stats(with the same config) are also need as array for calculate average method
+        pandaStat currConfigStats[currConfig.size()];
+        for (int i = 0; i < currConfig.size(); i++) {
+            currConfig[i].outputSingleStat_csv(outputStream);
+            currConfigStats[i] = currConfig[i];
+        }
+        pandaAverageStat newAverages = calculateAverages(currConfigStats, currConfig.size(), currConfig[0].domain,
+                                                         currConfig[0].config);
+        newAverages.outputAverageStats_csv(avg_outputStream, false);
+    }
+}
+
+void compareAndPrintStats_obd(vector<string> inputFiles,string outputFile,string avg_outputFile){
     vector<vector<pandaStat>> setOfStats;
     for(string file : inputFiles){
-       setOfStats.push_back(readProblem_csv(file));
+        setOfStats.push_back(readProblem_csv(file));
     }
     vector<vector<pandaStat>> intersecStats= compareSolvedStats_orderedByConfig(setOfStats);
     ofstream outputStream(outputFile);
     ofstream avg_outputStream(avg_outputFile);
-    initAverageStats_csv(avg_outputStream,false);
+    initAverageStats_csv(avg_outputStream,true);
     for(vector<pandaStat> currConfig: intersecStats){
         //the set of stats(with the same config) are also need as array for calculate average method
         pandaStat currConfigStats[currConfig.size()];
@@ -225,9 +234,8 @@ void compareAndPrintStats(vector<string> inputFiles,string outputFile,string avg
             currConfigStats[i]=currConfig[i];
         }
         pandaAverageStat newAverages = calculateAverages(currConfigStats,currConfig.size(),currConfig[0].domain,currConfig[0].config);
-        newAverages.outputAverageStats_csv(avg_outputStream, false);
+        newAverages.outputAverageStats_csv(avg_outputStream, true);
     }
-
 }
 
 
