@@ -28,9 +28,9 @@ namespace config{
 //C1-C4 & C7-C8
 //const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=relaxed;tdg=allowUC)\"";
 //C1-C8
-const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=allowUC)\"";
+//const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=allowUC)\"";
 //C1-C12
-//const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=uc)\"";
+const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=full;tdg=uc)\"";
 //No Constraints(C7+C8)
 //const string engineConf = "--suboptimal --gValue=none --heuristic=\"dof(netchange=none;lmclmc=none;pg=none;tdg=allowUC)\"";
 }
