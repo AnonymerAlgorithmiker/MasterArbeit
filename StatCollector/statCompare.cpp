@@ -124,9 +124,10 @@ vector<pandaStat> readProblem_csv(string problemFile){
     return problemStats;
 }
 
-// todo: finish dis
+//takes a set of pandastat and orders it by domain
+//outputs a set of pandastats for each occurring domain
 vector<vector<pandaStat>> orderSetByDomain(vector<pandaStat> unorderedSet){
-    int amntConfigs = 0;
+    vector<vector<pandaStat>> orderedSets;
     vector<string> domains;
     int domainNo;
     for(int i = 0; i< unorderedSet.size();i++){
@@ -140,8 +141,13 @@ vector<vector<pandaStat>> orderSetByDomain(vector<pandaStat> unorderedSet){
         }
         if(domainNo == -1){
             domains.push_back(currDomain);
+            vector<pandaStat> newSet = {currStat};
+            orderedSets.push_back(newSet);
+        }else{
+            orderedSets[domainNo].push_back(currStat);
         }
     }
+    return orderedSets;
 }
 
 //prints multiple pandaStats into a csv file
@@ -218,15 +224,24 @@ void compareAndPrintStats(vector<string> inputFiles,string outputFile,string avg
 }
 
 void compareAndPrintStats_obd(vector<string> inputFiles,string outputFile,string avg_outputFile){
-    vector<vector<pandaStat>> setOfStats;
+    vector<vector<pandaStat>> setOfStats_orderedByConfig;
+    vector<vector<pandaStat>> setOfStats_orderedByConfigAndDomain;
     for(string file : inputFiles){
-        setOfStats.push_back(readProblem_csv(file));
+        setOfStats_orderedByConfig.push_back(readProblem_csv(file));
     }
-    vector<vector<pandaStat>> intersecStats= compareSolvedStats_orderedByConfig(setOfStats);
+    vector<vector<pandaStat>> intersecStats= compareSolvedStats_orderedByConfig(setOfStats_orderedByConfig);
+    while(!intersecStats.empty()){
+        vector<pandaStat> setOrderdedByConfig = intersecStats.back();
+        intersecStats.pop_back();
+        vector<vector<pandaStat>> setOrderedByConfigAndDomain = orderSetByDomain(setOrderdedByConfig);
+        for(int i=0;i<setOrderedByConfigAndDomain.size();i++){
+            setOfStats_orderedByConfigAndDomain.push_back(setOrderedByConfigAndDomain[i]);
+        }
+    }
     ofstream outputStream(outputFile);
     ofstream avg_outputStream(avg_outputFile);
     initAverageStats_csv(avg_outputStream,true);
-    for(vector<pandaStat> currConfig: intersecStats){
+    for(vector<pandaStat> currConfig: setOfStats_orderedByConfigAndDomain){
         //the set of stats(with the same config) are also need as array for calculate average method
         pandaStat currConfigStats[currConfig.size()];
         for(int i=0;i<currConfig.size();i++){

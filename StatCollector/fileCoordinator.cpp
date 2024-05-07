@@ -161,12 +161,16 @@ void printCompleteStatsMultipleDomains(string problemFile,string averageFile_obd
     average_obdStream.close();
 }
 
-void compareStats(){
+void compareStats(bool orderedByDomain){
     int dirTotalSize = getDirTotalSize(config::compareDir);
     string* statNames = getSubDirNames(config::compareDir,dirTotalSize);
     vector<string> statNameVec;
     for(int i=0;i<dirTotalSize;i++){
         statNameVec.push_back(statNames[i]);
     }
-    compareAndPrintStats(statNameVec,config::compareFile,config::compareFile_avg);
+    if(orderedByDomain){
+        compareAndPrintStats_obd(statNameVec,config::compareFile,config::compareFile_avg);
+    }else{
+        compareAndPrintStats(statNameVec,config::compareFile,config::compareFile_avg);
+    }
 }

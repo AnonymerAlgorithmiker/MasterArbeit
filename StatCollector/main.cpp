@@ -11,6 +11,6 @@ int main() {
     //printStatsPerDomain(outputFile,planDir);
     //printStatsMultipleDomains(outputFile,planDir,true);
     //printCompleteStatsMultipleDomains(config::problemFile,config::average_obdFile,config::averageFile,config::planDir);
-    compareStats();
+    compareStats(true);
     return 0;
 }
