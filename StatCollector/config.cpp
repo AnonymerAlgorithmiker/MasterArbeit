@@ -18,9 +18,9 @@ namespace config{
     const string problemFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/problems.csv";
     const string average_obdFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/average_obd.csv";
     const string averageFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/average_allDomains.csv";
-    const string compareFile="/home/linusd/panda/StatCollectorPlans/StatCollectorOutput/compare.csv";
-    const string compareFile_avg="/home/linusd/panda/StatCollectorPlans/StatCollectorOutput/compare_averages.csv";
-    const string compareDir="/home/linusd/panda/StatCollectorPlans/statcompare/";
+    const string compareFile="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/compare.csv";
+    const string compareFile_avg="/home/linus/panda/StatCollectorPlans/StatCollectorOutput/compare_averages.csv";
+    const string compareDir="/home/linus/panda/StatCollectorPlans/statcompare/";
 
     const string confName = "C1-C8|Max-Method_and_Action|EveryNode";
     //const string confName = "No Constraints";
